@@ -1,0 +1,59 @@
+
+# coding: utf-8
+
+# In[19]:
+
+
+from bokeh.core.properties import value
+from bokeh.io import show, output_file
+from bokeh.models import ColumnDataSource
+from bokeh.plotting import figure
+from bokeh.transform import dodge
+
+
+# In[56]:
+
+
+output_file("GalaxyZooBarGraph.html")
+
+galaxy = ['All Galaxies', 'Elliptical Galaxies', 'Spiral Galaxies']
+number = ['Axial Ratio >= 0.7', 'Axial Ratio >0.2 & <0.7']
+
+data = {'galaxy' : galaxy,
+        'Axial Ratio >= 0.7'   : [-0.245, 0.03, -0.268],
+        'Axial Ratio >0.2 & <0.7'   : [-0.17, 0.041, -0.246],
+       }
+
+
+source = ColumnDataSource(data=data)
+
+p = figure(x_range=galaxy, y_range=(0, 10), plot_height=250, title="Correlation Between Galaxy Shape and Local Density",
+          toolbar_location=None, tools="")
+
+p.title.text_font_size = '13pt'
+
+p.vbar(x=dodge('galaxy', -0.12, range=p.x_range), top='Axial Ratio >= 0.7', width=0.2, source=source,
+       color="olive", legend=value("AR >=  0.7"))
+
+p.vbar(x=dodge('galaxy',  0.12,  range=p.x_range), top='Axial Ratio >0.2 & <0.7', width=0.2, source=source,
+       color="darkred", legend=value("AR >0.2 & <0.7"))
+
+#decoration!!! 
+p.plot_width=800
+p.plot_height=300
+
+p.legend.label_text_font_size = '7pt'
+
+p.y_range.start = -0.35
+p.y_range.end = 0.1
+p.yaxis.axis_label = "Average Local Density"
+
+p.xaxis.axis_label_text_font_size = "18pt"
+
+p.x_range.range_padding = 0.1
+p.xgrid.grid_line_color = None
+p.legend.location = "top_right"
+p.legend.orientation = "horizontal"
+
+show(p)
+
